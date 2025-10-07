@@ -1,17 +1,16 @@
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.http import JsonResponse
 from django.db import connection
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import serializers
-import numpy as np
-import tensorflow as tf
 import json
-import os
 import shutil
 import tempfile
+import os
+import zipfile
+
 
 def home(request):
     return HttpResponse("Hello, Django!")
@@ -130,17 +129,33 @@ def getAllContactForms(request):
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
+
 @api_view(['GET'])
 def train_tictactoe_model(request):
-    #if request.method != 'POST':
-    #    return JsonResponse({'error': 'Only POST allowed'}, status=405)
+    try:
+        # === Force Compatibility Mode ===
+        import tensorflow as tf
+        import numpy as np
+
+        # Disable V2 behavior where possible (reduces op complexity)
+        # tf.compat.v1.disable_v2_behavior()  # Helps with older runtime compatibility
+
+        # Enforce CPU-only (avoid GPU-specific kernels)
+        tf.config.set_visible_devices([], 'GPU')
+
+        print("Using TensorFlow version:", tf.__version__)
+
+    except ImportError:
+        return JsonResponse({'error': 'Failed to import TensorFlow. Make sure it is installed.'}, status=500)
+    except Exception as e:
+        return JsonResponse({'error': f'TensorFlow setup failed: {str(e)}'}, status=500)
 
     try:
         # === STEP 1: Generate synthetic self-play data ===
         def generate_game():
             board = np.zeros(9, dtype=int)
             moves = []
-            turn = 1
+            turn = 1  # X starts
             while True:
                 empty = np.where(board == 0)[0]
                 if len(empty) == 0:
@@ -149,22 +164,23 @@ def train_tictactoe_model(request):
                 moves.append((board.copy(), move))
                 board[move] = turn
 
-                # Check win (rows, cols, diag)
+                # Check win conditions
                 b = board.reshape(3, 3)
                 win_patterns = [
-                    b[0,:], b[1,:], b[2,:],           # rows
-                    b[:,0], b[:,1], b[:,2],           # cols
-                    [b[0,0], b[1,1], b[2,2]],         # diag \
-                    [b[0,2], b[1,1], b[2,0]]          # diag /
+                    b[0, :], b[1, :], b[2, :],           # Rows
+                    b[:, 0], b[:, 1], b[:, 2],           # Columns
+                    [b[0, 0], b[1, 1], b[2, 2]],         # Diagonal \
+                    [b[0, 2], b[1, 1], b[2, 0]]          # Diagonal /
                 ]
+                won = False
                 for pattern in win_patterns:
                     if all(p == turn for p in pattern):
+                        won = True
                         break
-                else:
-                    turn = -turn
-                    continue
-                break
-            return [(b.flatten(), m) for b, m in moves]
+                if won:
+                    break
+                turn = -turn
+            return [(state.flatten(), move) for state, move in moves]
 
         # Generate dataset
         X_train = []
@@ -178,11 +194,12 @@ def train_tictactoe_model(request):
         X_train = np.array(X_train, dtype=np.float32)
         y_train = np.array(y_train, dtype=np.int32)
 
-        # === STEP 2: Build & Train Model ===
+        # === STEP 2: Build Model (Simple Sequential) ===
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(64, activation='relu', input_shape=(9,)),
-            tf.keras.layers.Dense(64, activation='relu'),
-            tf.keras.layers.Dense(9, activation='softmax')
+            tf.keras.layers.Dense(64, activation='relu',
+                                  input_shape=(9,), name='dense_1'),
+            tf.keras.layers.Dense(64, activation='relu', name='dense_2'),
+            tf.keras.layers.Dense(9, activation='softmax', name='output')
         ])
 
         model.compile(
@@ -191,31 +208,46 @@ def train_tictactoe_model(request):
             metrics=['accuracy']
         )
 
-        history = model.fit(X_train, y_train, epochs=10, batch_size=32, verbose=1)
+        # Train
+        model.fit(X_train, y_train, epochs=10, batch_size=32, verbose=1)
 
-        # === STEP 3: Save Model ===
-        save_dir = "models/tictactoe_tf_model"
-        os.makedirs(save_dir, exist_ok=True)
-        #model.save(save_dir)
-        model.export("tictactoe_tf_model")
-        
+        # === STEP 3: Save Model in Compatible Format ===
+        save_dir = "tictactoe_tf_model"
+        if os.path.exists(save_dir):
+            # Clean old model
+            import shutil
+            shutil.rmtree(save_dir)
+
+        # Use low-level SavedModel save for maximum compatibility
+        @tf.function
+        def predict_fn(x):
+            return model(x)
+
+        # Define input signature explicitly
+        input_spec = tf.TensorSpec(
+            shape=[None, 9], dtype=tf.float32, name="input_tensor")
+        concrete_function = predict_fn.get_concrete_function(input_spec)
+
+        # Save with minimal signatures
+        tf.saved_model.save(
+            model,
+            save_dir,
+            signatures=concrete_function,
+            options=None  # Avoid new serialization features
+        )
 
         return JsonResponse({
             'status': 'success',
-            'message': 'Model trained and saved!',
+            'message': 'Model trained and saved using TF 2.8.0 with backward compatibility.',
             'epochs': 10,
             'dataset_size': len(X_train),
-            'save_path': save_dir
+            'save_path': save_dir,
+            'tensorflow_version': tf.__version__
         })
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-import os
-import shutil
-import tempfile
-from django.http import FileResponse, JsonResponse
-import zipfile
 
 @api_view(['GET'])
 def download_tictactoe_model(request):
@@ -230,7 +262,8 @@ def download_tictactoe_model(request):
 
         # Create ZIP archive
         shutil.make_archive(
-            base_name=os.path.join(temp_dir, 'tictactoe_tf_model'),  # output path (no extension)
+            # output path (no extension)
+            base_name=os.path.join(temp_dir, 'tictactoe_tf_model'),
             format='zip',
             root_dir=model_dir  # directory to compress
         )
