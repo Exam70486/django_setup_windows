@@ -1,5 +1,7 @@
+from django.http import FileResponse
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.db import connection
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -129,28 +131,6 @@ def getAllContactForms(request):
         return Response({'error': str(e)}, status=500)
 
 @api_view(['GET'])
-def download_tictactoe_model(request):
-    model_dir = "/workspace/models/tictactoe_tf_model"
-    if not os.path.exists(model_dir):
-        return JsonResponse({"error": "Model not trained yet."}, status=404)
-
-    # Create zip in memory
-    temp_dir = tempfile.mkdtemp()
-    zip_path = shutil.make_archive(
-        os.path.join(temp_dir, 'tictactoe_tf_model'),
-        'zip',
-        model_dir
-    )
-
-    response = FileResponse(
-        open(zip_path + '.zip', 'rb'),
-        content_type='application/zip'
-    )
-    response['Content-Disposition'] = 'attachment; filename="tictactoe_tf_model.zip"'
-    return response
-
-
-@api_view(['GET'])
 def train_tictactoe_model(request):
     #if request.method != 'POST':
     #    return JsonResponse({'error': 'Only POST allowed'}, status=405)
@@ -216,7 +196,9 @@ def train_tictactoe_model(request):
         # === STEP 3: Save Model ===
         save_dir = "models/tictactoe_tf_model"
         os.makedirs(save_dir, exist_ok=True)
-        model.save(save_dir)
+        #model.save(save_dir)
+        model.export("tictactoe_tf_model")
+        
 
         return JsonResponse({
             'status': 'success',
@@ -228,3 +210,38 @@ def train_tictactoe_model(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+import os
+import shutil
+import tempfile
+from django.http import FileResponse, JsonResponse
+import zipfile
+
+@api_view(['GET'])
+def download_tictactoe_model(request):
+    model_dir = "tictactoe_tf_model"
+    if not os.path.exists(model_dir):
+        return JsonResponse({"error": "Model not trained yet."}, status=404)
+
+    try:
+        # Create a temporary directory for the zip file
+        temp_dir = tempfile.mkdtemp()
+        zip_path = os.path.join(temp_dir, 'tictactoe_tf_model.zip')
+
+        # Create ZIP archive
+        shutil.make_archive(
+            base_name=os.path.join(temp_dir, 'tictactoe_tf_model'),  # output path (no extension)
+            format='zip',
+            root_dir=model_dir  # directory to compress
+        )
+
+        # Serve the file
+        response = FileResponse(
+            open(zip_path, 'rb'),
+            content_type='application/zip'
+        )
+        response['Content-Disposition'] = 'attachment; filename="tictactoe_tf_model.zip"'
+        return response
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

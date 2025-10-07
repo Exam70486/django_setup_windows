@@ -1,4 +1,3 @@
-
 -----------------------------------------
 -- main setup (not windows compatible)
 -----------------------------------------
@@ -21,6 +20,19 @@ pip install django djangorestframework pyodbc mssql-django django-cors-headers
 # 5. ✅ ADD TENSORFLOW FOR AI MODEL TRAINING
 pip install tensorflow
 
+# 6. Optional shorcut for both 4. and 5. 
+pip install -r requirements.txt
+
 # 7. Run server 
 python manage.py runserver
-______________________________________________________________________________
+
+# 8. Train Model
+https://srj89p-8000.csb.app/train_tictactoe_model
+{"status": "success", "message": "Model trained and saved!", "epochs": 10, "dataset_size": 22882, "save_path": "models/tictactoe_tf_model"}
+
+# 9. Download Model (alternative #1)
+https://srj89p-8000.csb.app/download_tictactoe_model
+
+# 10. Zip Model     (alternative #2)
+cd tictactoe_tf_model
+zip -r tictactoe_tf_model.zip tictactoe_tf_model/
