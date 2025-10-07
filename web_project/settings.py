@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-b$1j7b0_*_v9ckp%ha!-*$q=dv2))6ksq^onrdnvb78uedzuxb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['srj89p-8000.csb.app', 'localhost', '127.0.0.1','https://apereznwo.github.io/']
+ALLOWED_HOSTS = ['srj89p-8000.csb.app', 'localhost', '127.0.0.1','apereznwo.github.io'] 
 
 # Application definition
 
