@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-b$1j7b0_*_v9ckp%ha!-*$q=dv2))6ksq^onrdnvb78uedzuxb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['srj89p-8000.csb.app', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -85,10 +85,10 @@ DATABASES = {
         'PASSWORD': 'aperezNWO_SQLLogin_1',
         'HOST': 'webapiangulardemo.mssql.somee.com',
         'PORT': '1433'
-        },
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-        },    
+    },
+    'OPTIONS': {
+        'driver': 'ODBC Driver 17 for SQL Server',
+    },
 }
 
 

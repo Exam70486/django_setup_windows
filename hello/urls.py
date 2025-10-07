@@ -4,5 +4,7 @@ from hello import views
 urlpatterns = [
     path("", views.home, name="home"),
     path("my_view", views.my_view, name="my_view"),
-    path('getAllLogs', views.raw_sql_endpoint, name='raw_sql_endpoint'),
+    path('getAllLogs', views.getAllLogs,    name='getAllLogs'),
+    path('getAllPersons', views.getAllPersons, name='getAllPersons'),
+    path('getAllContactForms', views.getAllContactForms, name='getAllContactForms'),
 ]

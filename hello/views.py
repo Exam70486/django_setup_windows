@@ -5,28 +5,33 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import serializers
 
+
 def home(request):
     return HttpResponse("Hello, Django!")
 
 
 def my_view(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT TOP 10 * FROM accessLogs order by ID_COLUMN DESC")
+        cursor.execute(
+            "SELECT TOP 10 * FROM accessLogs order by ID_COLUMN DESC")
         rows = cursor.fetchall()
-    
+
     # Process rows or pass them to the template context
     context = {'rows': rows}
     return render(request, 'my_template.html', context)
 
 # Define a serializer to handle the raw data.
+
+
 class RawDataSerializer(serializers.Serializer):
     def to_representation(self, instance):
         # Convert row tuple to dictionary
         fields = [field[0] for field in self.context['cursor'].description]
         return dict(zip(fields, instance))
-    
+
+
 @api_view(['GET'])
-def raw_sql_endpoint(request):
+def getAllLogs(request):
     try:
         with connection.cursor() as cursor:
             # Your raw SQL query
@@ -56,9 +61,64 @@ def raw_sql_endpoint(request):
                  order by 
                        AL.[ID_column] desc
                   """
-            cursor.execute(sql);
-            rows = cursor.fetchall();
-            serializer = RawDataSerializer(rows, many=True, context={'cursor': cursor}) # Pass cursor for field names
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            serializer = RawDataSerializer(rows, many=True, context={
+                                           'cursor': cursor})  # Pass cursor for field names
             return Response(serializer.data)
     except Exception as e:
-        return Response({'error': str(e)}, status=500);
+        return Response({'error': str(e)}, status=500)
+
+
+@api_view(['GET'])
+def getAllPersons(request):
+    try:
+        with connection.cursor() as cursor:
+            # Your raw SQL query
+            sql = """
+
+                  SELECT 
+                     [Id_Column]        id_Column
+                    ,[NombreCompleto]   nombreCompleto
+                    ,[ProfesionOficio]  profesionOficio
+                    ,[Ciudad]           ciudad
+                FROM
+                    [dbo].[Persona]
+                ORDER BY 
+                    Id_Column 
+
+                """
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            serializer = RawDataSerializer(rows, many=True, context={
+                                           'cursor': cursor})  # Pass cursor for field names
+            return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+
+@api_view(['GET'])
+def getAllContactForms(request):
+    try:
+        with connection.cursor() as cursor:
+            # Your raw SQL query
+            sql = """
+
+                  SELECT 
+                        id         id 
+                        ,Name      name
+                        ,Email     field_1
+                        ,Message   field_2
+                        ,CreatedAt field_3
+                FROM
+                    ContactForm
+                ORDER BY 
+                    id desc
+                """
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            serializer = RawDataSerializer(rows, many=True, context={
+                                           'cursor': cursor})  # Pass cursor for field names
+            return Response(serializer.data)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
