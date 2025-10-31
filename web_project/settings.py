@@ -135,7 +135,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200"  # Replace with your frontend origin
+    "https://apereznwo.github.io"
 ]
 CORS_ALLOW_METHODS = [
     "GET",
@@ -145,5 +145,5 @@ CORS_ALLOW_METHODS = [
 ]
 CORS_ALLOW_HEADERS = [
     "Content-Type",
-    "Authorization",  # Add any necessary headers
+    "Authorization"
 ]
