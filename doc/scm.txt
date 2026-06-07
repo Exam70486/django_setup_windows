@@ -13,7 +13,8 @@ sudo apt-get update
 
 # 3. Install ODBC Driver for SQL Server (only if connecting to MS SQL)
 sudo ACCEPT_EULA=Y apt-get install msodbcsql17
-sudo ACCEPT_EULA=Y apt-get install msodbcsql18
+# unable to install ms sql server 18
+#sudo ACCEPT_EULA=Y apt-get install msodbcsql18
 
 # 4. Install Python packages
 pip install django djangorestframework pyodbc mssql-django django-cors-headers
