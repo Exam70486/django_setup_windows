@@ -135,15 +135,21 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
-    "https://apereznwo.github.io"
-]
+# Remove or comment out CORS_ALLOWED_ORIGINS
+# CORS_ALLOWED_ORIGINS = [
+#     "https://apereznwo.github.io",
+# ]
+
+# Add this line to allow all origins
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
     "PUT",
     "DELETE",
 ]
+
 CORS_ALLOW_HEADERS = [
     "Content-Type",
     "Authorization"
