@@ -75,11 +75,13 @@ docker builder prune -f
 4) echo "YOUR_PAT_HERE" | docker login --username apereznwogmail --password-stdin
 
 # publish in docker hub
+# publish is time consuming
 # https://hub.docker.com/
 5) docker push apereznwogmail/django_setup_windows:latest
 
+# publis on render
 # URL FOR RENDER : https://dashboard.render.com/
-# publish is time consuming
+
 # 6) docker.io/apereznwogmail/django_setup_windows:latest
 6) publish as a docker runtime, not as a docker image.
 
