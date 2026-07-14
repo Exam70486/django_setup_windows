@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-b$1j7b0_*_v9ckp%ha!-*$q=dv2))6ksq^onrdnvb78uedzuxb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['4fxwlw-8000.csb.app', 'localhost',
-                 '127.0.0.1', 'https://apereznwo.github.io/']
+ALLOWED_HOSTS = ['sp223k-8000.csb.app', 'localhost', '127.0.0.1','apereznwo.github.io','django-setup-windows.onrender.com']
 
 # Application definition
 
@@ -77,7 +76,6 @@ WSGI_APPLICATION = 'web_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
@@ -85,13 +83,17 @@ DATABASES = {
         'USER': 'aperezNWO_SQLLogin_1',
         'PASSWORD': 'aperezNWO_SQLLogin_1',
         'HOST': 'webapiangulardemo.mssql.somee.com',
-        'PORT': '1433'
-    },
-    'OPTIONS': {
-        'driver': 'ODBC Driver 18 for SQL Server',
-        'TrustServerCertificate': 'yes',  # <-- ADD THIS LINE
-    },
+        'PORT': '1433',
+        'OPTIONS': {
+            # Especifica explícitamente el driver 18 aquí
+            'driver': 'ODBC Driver 18 for SQL Server',
+            # Añade las propiedades requeridas por el Driver 18 en entornos en la nube
+            'extra_params': 'driver=ODBC Driver 18 for SQL Server;TrustServerCertificate=yes;',
+        },
+    }
 }
+
+
 
 
 # Password validation
@@ -135,22 +137,16 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Remove or comment out CORS_ALLOWED_ORIGINS
-# CORS_ALLOWED_ORIGINS = [
-#     "https://apereznwo.github.io",
-# ]
-
-# Add this line to allow all origins
-CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOWED_ORIGINS = [
+    "https://apereznwo.github.io",  # Replace with your frontend origin
+]
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
     "PUT",
     "DELETE",
 ]
-
 CORS_ALLOW_HEADERS = [
     "Content-Type",
-    "Authorization"
+    "Authorization",  # Add any necessary headers
 ]
