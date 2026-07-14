@@ -1,3 +1,4 @@
+
 -----------------------------------------
 -- main setup (not windows compatible)
 -----------------------------------------
@@ -7,23 +8,119 @@ sudo apt-get install python3-venv    # Install venv if not available
 python3 -m venv .venv
 source .venv/bin/activate
 
-# 2. Add Microsoft repository for SQL Server (optional, for DB connectivity)
-curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+## 2. Add Microsoft repository for SQL Server (optional, for DB connectivity)
+## curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+## sudo apt-get update
+
+## 3. Install ODBC Driver for SQL Server (only if connecting to MS SQL)
+## sudo ACCEPT_EULA=Y apt-get install msodbcsql17
+
+# 2. Descargar e instalar la clave y el repositorio de Microsoft para Ubuntu/Debian
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.4.d/microsoft.asc
+
+# Añadir el repositorio correcto
+curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+
+# 2. Actualizar los repositorios del sistema
 sudo apt-get update
 
-# 3. Install ODBC Driver for SQL Server (only if connecting to MS SQL)
-sudo ACCEPT_EULA=Y apt-get install msodbcsql17
-# unable to install ms sql server 18
-#sudo ACCEPT_EULA=Y apt-get install msodbcsql18
+# 3. Instalar el ODBC Driver 18 (y unixodbc)
+# Te pedirá aceptar los términos de licencia en la terminal (puedes usar las flechas y Enter)
+sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev
+
 
 # 4. Install Python packages
 pip install django djangorestframework pyodbc mssql-django django-cors-headers
 
 # 5. ✅ ADD TENSORFLOW FOR AI MODEL TRAINING
-pip install tensorflow==2.8.0 protobuf==3.20.3 numpy==1.21.6 --no-cache-dir --force-reinstall
+pip install tensorflow
 
 # 6. Optional shorcut for both 4. and 5. 
+pip freeze > requirements.txt
+# conflicting versions delete version number
 pip install -r requirements.txt
 
 # 7. Run server 
 python manage.py runserver
+
+/////////////////////////////////////////
+// DOCKER
+/////////////////////////////////////////
+
+--------------------------
+--------------------------
+-- FIRSR TIME BUILD
+--------------------------
+--------------------------
+
+0) Create Dockerfile (ask i.a.).
+
+1) After saving the file, you need to apply these changes to your environment:
+
+- Open the Command Palette in VS Code (press Ctrl+Shift+P or Cmd+Shift+P on Mac).
+- Type and select: "Codespaces: Rebuild Container".
+
+## BUILD FROM GITHUB CODESPACES  --> "Owned by 'aperezNWO'"
+0) https://github.com/codespaces
+
+# docker must be installed on desktop. it was from codespaces, only visual studio code extensions was installed
+# dot included !!!!
+# (time consumming)
+1) docker buildx build -t django_setup_windows .
+
+# create a tag previous to publish
+3) docker tag django_setup_windows:latest apereznwogmail/django_setup_windows:latest
+
+
+# list images built
+2) docker image ls 
+
+# log into docker for publish
+# get PAT from https://app.docker.com/accounts/apereznwogmail/settings/personal-access-tokens
+## privileges : read/write/delete
+## must return 'Login Succeeded'
+4) echo "YOUR_PAT_HERE" | docker login --username apereznwogmail --password-stdin
+
+# publish in docker hub
+# https://hub.docker.com/
+5) docker push apereznwogmail/django_setup_windows:latest
+
+# URL FOR RENDER : https://dashboard.render.com/
+# publish is time consuming
+# 6) docker.io/apereznwogmail/django_setup_windows:latest
+6) publish as a docker runtime, not as a docker image.
+
+--------------------------
+--------------------------
+-- PUBLISH CHANGES
+--------------------------
+--------------------------
+
+## 0. save changes on git.
+git add * && git commit -m"fractal changes" && git push && git pull 
+
+## 1. docker build -t my-spring-boot-app .
+docker buildx build -t cs_nodejs_ocr .
+
+## 2. docker tag my-spring-boot-app yourusername/your-repo:latest
+docker tag cs_nodejs_ocr:latest apereznwogmail/cs_nodejs_ocr:latest
+
+## 3. log into docker for publish
+## get/create PAT from https://app.docker.com/accounts/apereznwogmail/settings/personal-access-tokens
+## create with read/write scope
+echo "YOUR_PAT_HERE" | docker login --username apereznwogmail --password-stdin
+
+## 4. docker push yourusername/your-repo:latest
+docker push apereznwogmail/cs_nodejs_ocr:latest 
+
+--------------------------
+--------------------------
+-- DOCUMENTATION
+--------------------------
+--------------------------
+
+1) AI GUIDE : https://docs.docker.com/get-started/ --> GORDON
+
+2) GUIDES   : https://docs.docker.com/guides/java/
+
+/////////////////////////////////////////

@@ -128,3 +128,8 @@ def getAllContactForms(request):
             return Response(serializer.data)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+    
+def getPythonVersion(request):
+    current_version = sys.version
+    return HttpResponse(f"{current_version}")
+
