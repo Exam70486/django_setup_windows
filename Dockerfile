@@ -35,4 +35,7 @@ COPY . .
 EXPOSE 10000
 
 # Ejecutar la aplicación usando Gunicorn apuntando a tu módulo web_project
-CMD ["gunicorn", "web_project.wsgi:application", "--bind", "0.0.0.0:10000"]
+#CMD ["gunicorn", "web_project.wsgi:application", "--bind", "0.0.0.0:10000"]
+# Before: CMD ["gunicorn", "web_project.wsgi:application", "--bind", "0.0.0.0:10000"]
+# After:
+CMD ["gunicorn", "web_project.wsgi:application", "--bind", "0.0.0.0:10000", "--access-logfile", "-", "--access-logformat", "%(h)s %(l)s %(u)s %(t)s \"%(r)s\" %(s)s %(b)s"]

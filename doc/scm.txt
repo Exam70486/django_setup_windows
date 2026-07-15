@@ -9,6 +9,11 @@ rm -rf .venv
 python3.12 -m venv .venv
 source .venv/bin/activate
 
+# 6. Optional shorcut for both 4. and 5. 
+pip freeze > requirements.txt
+# conflicting versions delete version number
+pip install -r requirements.txt
+
 # 2. Descargar e instalar la clave y el repositorio de Microsoft para Ubuntu/Debian
 curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.4.d/microsoft.asc
 
@@ -29,10 +34,6 @@ pip install django djangorestframework pyodbc mssql-django django-cors-headers
 # 5. ✅ ADD TENSORFLOW FOR AI MODEL TRAINING
 pip install tensorflow
 
-# 6. Optional shorcut for both 4. and 5. 
-pip freeze > requirements.txt
-# conflicting versions delete version number
-pip install -r requirements.txt
 
 # 7. Run server 
 python manage.py runserver
