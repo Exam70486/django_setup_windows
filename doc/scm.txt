@@ -45,9 +45,36 @@ python manage.py runserver
 
 --------------------------
 --------------------------
--- FIRSR TIME BUILD
+-- FIRST BUILD
 --------------------------
 --------------------------
+
+-------------------------------------------------------
+# TO SAVE DISK SPACE
+-------------------------------------------------------
+
+# This removes all stopped containers, unused networks, and dangling images
+docker system prune -a --volumes -f
+
+# This clears out hidden build caches (crucial for freeing up space)
+docker builder prune -a -f
+
+#
+rm -rf .venv/
+
+#
+pip cache purge
+
+# Find and delete every __pycache__ directory recursively from your project
+find . -type d -name "__pycache__" -exec rm -r {} +
+
+#
+sudo apt-get clean
+
+m check disk space
+df -h . && du -h --max-depth=1 | sort -hr
+-------------------------------------------------------
+
 
 ## BUILD FROM GITHUB CODESPACES  --> "Owned by 'aperezNWO'"
 0) https://github.com/codespaces
@@ -55,10 +82,6 @@ python manage.py runserver
 # docker must be installed on desktop. it was from codespaces, only visual studio code extensions was installed
 # dot included !!!!
 # (time consumming)
-
-# TO SAVE DISK SPACE
-rm -rf .venv
-docker builder prune -f
 
 1) docker buildx build -t django_setup_windows .
 
