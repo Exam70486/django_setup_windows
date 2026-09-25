@@ -31,6 +31,10 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Copiar todo el código fuente del proyecto al contenedor
 COPY . .
 
+# Recopilar archivos estáticos de Django, DRF y Swagger (drf-spectacular)
+# Asegúrate de tener 'whitenoise' configurado en INSTALLED_APPS y MIDDLEWARE en settings.py
+RUN python manage.py collectstatic --noinput
+
 # Exponer el puerto por defecto que utiliza Render
 EXPOSE 10000
 

@@ -31,15 +31,18 @@ pip install django djangorestframework pyodbc mssql-django django-cors-headers
 # 5. ✅ ADD TENSORFLOW FOR AI MODEL TRAINING
 pip install tensorflow
 
-# 6. ✅ static files
+# 6. ✅ REFLECTION UTILITY
+pip install drf-spectacular
+
+# 7. ✅ static files
 pip install whitenoise
 python manage.py collectstatic
 
-# 7. Optional shorcut for both 4. and 5. 
+# 8. Optional shorcut for both 4. and 5. 
 pip freeze > requirements.txt
 # conflicting versions delete version number
 
-# 8. Run server 
+# 9. Run server 
 python manage.py runserver
 
 /////////////////////////////////////////

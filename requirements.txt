@@ -22,6 +22,7 @@ defusedxml==0.7.1
 Django
 django-cors-headers==4.9.0
 djangorestframework==3.17.1
+drf-spectacular
 executing==2.2.1
 fastjsonschema==2.21.2
 flatbuffers==25.12.19
