@@ -48,7 +48,7 @@ ALLOWED_HOSTS = [  'sp223k-8000.csb.app'
                    ,'django-setup-windows-latest-e1ed.onrender.com'
                    ,'django-setup-windows-latest-aa3l.onrender.com'
                    ,'django-setup-windows-latest-y78e.onrender.com'
-                   ,'django-setup-windows-latest-97ln.onrender.com/'
+                   ,'django-setup-windows-latest-97ln.onrender.com'
                    ]
 
 # Application definition
