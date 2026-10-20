@@ -146,7 +146,7 @@ git push -u origin main
 ## 0. save changes on git.
 
 git add * 
-git commit -m"getPythonWebServerVersion"
+git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.0]"
 git remote set-url origin https://aperezNWOGmail:<YOUR_PAT_HERE>@github.com/aperezNWOGmailerezNWO/django_setup_windows.git
 git push --set-upstream origin main
 
