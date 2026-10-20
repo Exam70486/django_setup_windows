@@ -1,4 +1,5 @@
 
+from django.http import JsonResponse
 from django.http import FileResponse, JsonResponse,  HttpResponse
 from django.shortcuts import render
 from django.db import connection
@@ -12,7 +13,7 @@ from rest_framework import serializers
 from rest_framework import status
 from tensorflow.keras import layers, models
 from typing import Tuple, Dict
-import django
+import socket
 import sys
 import json
 import zipfile
@@ -44,7 +45,7 @@ def health_check(request):
 
 @api_view(['GET'])
 def getAppVersion(request):
-    current_version      = '1.0.0'
+    current_version      = '1.0.1'
     return HttpResponse(f"{current_version}")
 
 @api_view(['GET'])
@@ -60,6 +61,37 @@ def getPythonWebServerVersion(request):
 @api_view(['GET'])
 def ping(request):
     return Response(status=204)
+
+def health(request):
+    # Import dynamically to avoid circular dependency with urls.py
+    from hello.urls import ROUTES_MAP
+
+    # a) Server details and status
+    server_info = {
+        "status": "UP",
+        "message": "The server is working properly.",
+        "server_hostname": socket.gethostname(),
+        "django_version": django.get_version(),
+        "python_version": sys.version.split(' ')[0]
+    }
+
+    # b) Extract endpoints with paths and descriptions from ROUTES_MAP
+    endpoints = {
+        key: {
+            "path": f"/{data['path']}",
+            "name": data["name"],
+            "description": data["description"]
+        }
+        for key, data in ROUTES_MAP.items()
+    }
+
+    response_data = {
+        "server": server_info,
+        "endpoints": endpoints
+    }
+
+    return JsonResponse(response_data, status=200)
+
 #############################################
 # END GENERAL FUNCIONALITY
 #############################################

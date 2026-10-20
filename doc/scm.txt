@@ -124,11 +124,9 @@ df -h . && du -h --max-depth=1 | sort -hr
 ## CRONJOBS - https://console.cron-job.org/jobs
     https://django-setup-windows-latest-9vkx.onrender.com/ping
 
---------------------------
---------------------------
--- PUBLISH GIT CHANGES
---------------------------
---------------------------
+/////////////////////////////////////////
+// UPDATE GIT CHANGES
+/////////////////////////////////////////
 
 ## PATH 1 - NO EXTERNAL AUTH REQUIRED
 git remote add origin https://github.com/aperezNWO/django_setup_windows.git
@@ -149,7 +147,7 @@ git push -u origin main
 ## 0. save changes on git.
 
 git add * 
-git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.0]"
+git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.1]" -m"1) health() endpoint"
 git remote set-url origin https://aperezNWOGmail:<YOUR_PAT_HERE>@github.com/aperezNWOGmailerezNWO/django_setup_windows.git
 git push --set-upstream origin main
 
@@ -163,14 +161,5 @@ git push --set-upstream origin main
 1) AI GUIDE : https://docs.docker.com/get-started/ --> GORDON
 
 2) GUIDES   : https://docs.docker.com/guides/java/
-
-/////////////////////////////////////////
-// UPDATE GIT CHANGES
-/////////////////////////////////////////
-
-git add * 
-git commit -m"[ANGULAR DEMO] - [ENV_PROD] v[3.8.7]" -m"1) Dart - Dijkstra"
-git remote set-url origin https://aperezNWO:<YOUR_PAT_HERE>@github.com/aperezNWO/PWA_DEMO_ENV_PROD.git
-git push --set-upstream origin main
 
 /////////////////////////////////////////
