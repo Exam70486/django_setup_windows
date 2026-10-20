@@ -33,7 +33,7 @@ ROUTES_MAP = {
         "description": "Retrieves all submitted contact form records."
     },
     "health": {
-        "path": "health/",
+        "path": "health",
         "view": views.health,
         "name": "health",
         "description": "Returns server status, runtime information, and API routes listing."

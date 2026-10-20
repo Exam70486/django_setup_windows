@@ -40,10 +40,6 @@ def home(request):
     return HttpResponse("Hello, Django!")
 
 @api_view(['GET'])
-def health_check(request):
-    return Response({'status': 'ok'})
-
-@api_view(['GET'])
 def getAppVersion(request):
     current_version      = '1.0.1'
     return HttpResponse(f"{current_version}")
@@ -62,6 +58,7 @@ def getPythonWebServerVersion(request):
 def ping(request):
     return Response(status=204)
 
+@api_view(['GET'])
 def health(request):
     # Import dynamically to avoid circular dependency with urls.py
     from hello.urls import ROUTES_MAP

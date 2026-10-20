@@ -150,7 +150,7 @@ git add *
 git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.1]" -m"1) health() endpoint"
 git remote set-url origin https://aperezNWOGmail:<YOUR_PAT_HERE>@github.com/aperezNWOGmailerezNWO/django_setup_windows.git
 git push --set-upstream origin main
-
+git pull 
 
 --------------------------
 --------------------------
