@@ -81,28 +81,31 @@ df -h . && du -h --max-depth=1 | sort -hr
 --------------------------
 
 ## BUILD FROM GITHUB CODESPACES  --> "Owned by 'aperezNWO'"
-0) https://github.com/codespaces
+   https://github.com/codespaces
 
-# docker must be installed on desktop. it was from codespaces, only visual studio code extensions was installed
-# dot included !!!!
-# (time consumming)
-1) docker buildx build -t django_setup_windows .
+## docker must be installed on desktop. it was from codespaces, only visual studio code extensions was installed
+## dot included !!!!
+## (time consumming)
+  docker buildx build -t django_setup_windows .
 
-# create a tag previous to publish
-3) docker tag django_setup_windows:latest apereznwogmail/django_setup_windows:latest
+## create a tag previous to publish
+  docker tag django_setup_windows:latest apereznwogmail/django_setup_windows:latest
 
-# list images built
-2) docker image ls 
+## list images built
+  docker image ls 
 
-# log into docker for publish
-# get PAT from https://app.docker.com/accounts/apereznwogmail/settings/personal-access-tokens
-## privileges : read/write/delete
-## must return 'Login Succeeded'
-4) echo "YOUR_PAT_HERE" | docker login --username apereznwogmail --password-stdin
+## log into docker for publish
+    ## OPTION 1) GITHUB CODESPACES
+        ## get PAT from https://app.docker.com/accounts/apereznwogmail/settings/personal-access-tokens
+        ## privileges : read/write/delete
+        echo "YOUR_PAT_HERE" | docker login --username apereznwogmail --password-stdin
+    ## OPTION 2) docker desktop
+        docker login
+    ## must return 'Login Succeeded' (both cases)
 
-# publish in docker hub
-# https://hub.docker.com/
-5) docker push apereznwogmail/django_setup_windows:latest
+## publish in docker hub
+   ## https://hub.docker.com/
+   docker push apereznwogmail/django_setup_windows:latest
 
 # URL FOR RENDER : https://dashboard.render.com/
 # publish is time consuming
