@@ -42,7 +42,7 @@ def home(request):
 
 @api_view(['GET'])
 def getAppVersion(request):
-    current_version      = '1.0.1'
+    current_version      = '1.0.2'
     return HttpResponse(f"{current_version}")
 
 @api_view(['GET'])
