@@ -131,7 +131,7 @@ df -h . && du -h --max-depth=1 | sort -hr
 ## PATH 1 - NO EXTERNAL AUTH REQUIRED
 git remote add origin https://github.com/aperezNWO/django_setup_windows.git
 git add *
-git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.1]" -m"1) health() endpoint"
+git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.2]" -m"1) render config update"
 git push 
 git pull
 
@@ -149,7 +149,7 @@ git pull
 ## 0. save changes on git.
 
 git add * 
-git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.1]" -m"1) health() endpoint"
+git commit -m"[Application DJANGO_SETUP_WINDOWS] - v[1.0.2]" -m"1) render config update"
 git remote set-url origin https://aperezNWOGmail:<YOUR_PAT_HERE>@github.com/aperezNWOGmailerezNWO/django_setup_windows.git
 git push --set-upstream origin main
 git pull 
